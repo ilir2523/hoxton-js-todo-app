@@ -44,6 +44,7 @@ const state = {
     
 }
 
+
 function listenTodoForm() {
     addItemForm.addEventListener("submit", function (e) {
         e.preventDefault()
@@ -51,13 +52,13 @@ function listenTodoForm() {
         const todo = {
             title: addItemForm.text.value,
             completed: false,
-            
         }
 
         state.todos.push(todo)
 
         renderIncompletedTodos(todo)
         addItemForm.reset()
+        
     })
 }
 
@@ -116,39 +117,55 @@ function deleteTodo(text) {
         const todoEl = document.createElement('li')
         todoEl.setAttribute('class', 'todo completed')
 
-        todoEl.innerHTML = `
-        <div class="completed-section">
-            <input class="completed-checkbox" type="checkbox" />
-        </div>
-        <div class="text-section">
-            <p class="text">${todo.title}</p>
-        </div>
-        <div class="button-section">
-            <button class="edit">Edit</button>
-            <button class="delete">Delete</button>
-        </div>
-        `
-        function listenDeleteBtn() {
-            const deleteBtn = todoEl.querySelector('.delete')
-            deleteBtn.addEventListener('click', function () {
-                deleteTodo(todo.title)
-                render()
-            })
-        }
-        
-        function lstenCompletedCheckbox () {
-            const completedCheckbox = todoEl.querySelector('.completed-checkbox')
-            completedCheckbox.checked = todo.completed
+        const checkboxDivEl = document.createElement('div')
+        checkboxDivEl.setAttribute('class', 'completed-section')
+
+        const textDivEl = document.createElement('div')
+        textDivEl.setAttribute('class', 'text-section')
+
+        const buttonDivEl = document.createElement('div')
+        buttonDivEl.setAttribute('class', 'button-section')
+
+        const checkboxInputEl = document.createElement('input')
+        checkboxInputEl.setAttribute('class', 'completed-checkbox')
+        checkboxInputEl.setAttribute('type', 'checkbox')
+
+        const textPEl = document.createElement('p')
+        textPEl.setAttribute('class', 'text')
+        textPEl.textContent = todo.title
+
+        const editEl = document.createElement('button')
+        editEl.setAttribute('class', 'edit')
+        editEl.textContent = "edit"
+
+        const deleteEl = document.createElement('button')
+        deleteEl.setAttribute('class', 'delete')
+        deleteEl.textContent = "delete"
+
+        function listenCompletedCheckbox () {
+            checkboxInputEl.checked = todo.completed
             
-            completedCheckbox.addEventListener("click", function() {
+            checkboxInputEl.addEventListener("click", function() {
                 toggleTodo(todo)
                 render()
             })}
 
+        function listenDeleteBtn() {
+            // const deleteBtn = todoEl.querySelector('.delete')
+            deleteEl.addEventListener('click', function () {
+                deleteTodo(todo.title)
+                render()
+            })
+        }
+
         listenDeleteBtn()    
-        lstenCompletedCheckbox ()
-        
+        listenCompletedCheckbox()
+        checkboxDivEl.append(checkboxInputEl)
+        textDivEl.append(textPEl)
+        buttonDivEl.append(editEl, deleteEl)
+        todoEl.append(checkboxDivEl, textDivEl, buttonDivEl)
         completedList.append(todoEl)
+
     }
 }
 
@@ -157,41 +174,56 @@ function renderIncompletedTodos() {
     todoList.innerHTML = ''
 
     for (const todo of incompletedTodos) {
-    const todoEl = document.createElement('li')
-    todoEl.setAttribute('class', 'todo')
+        const todoEl = document.createElement('li')
+        todoEl.setAttribute('class', 'todo')
 
-    todoEl.innerHTML = `
-    <div class="completed-section">
-        <input class="completed-checkbox" type="checkbox" />
-    </div>
-    <div class="text-section">
-        <p class="text">${todo.title}</p>
-    </div>
-    <div class="button-section">
-        <button class="edit">Edit</button>
-        <button class="delete">Delete</button>
-    </div>
-    `
-    function listenDeleteBtn() {
-        const deleteBtn = todoEl.querySelector('.delete')
-        deleteBtn.addEventListener('click', function () {
-            deleteTodo(todo.title)
-            render()
-        })
-    }
-    
-    function lstenCompletedCheckbox () {
-        const completedCheckbox = todoEl.querySelector('.completed-checkbox')
-        completedCheckbox.checked = todo.completed
-        
-        completedCheckbox.addEventListener("click", function() {
-            toggleTodo(todo)
-            render()
-        })}
+        const checkboxDivEl = document.createElement('div')
+        checkboxDivEl.setAttribute('class', 'completed-section')
+
+        const textDivEl = document.createElement('div')
+        textDivEl.setAttribute('class', 'text-section')
+
+        const buttonDivEl = document.createElement('div')
+        buttonDivEl.setAttribute('class', 'button-section')
+
+        const checkboxInputEl = document.createElement('input')
+        checkboxInputEl.setAttribute('class', 'completed-checkbox')
+        checkboxInputEl.setAttribute('type', 'checkbox')
+
+        const textPEl = document.createElement('p')
+        textPEl.setAttribute('class', 'text')
+        textPEl.textContent = todo.title
+
+        const editEl = document.createElement('button')
+        editEl.setAttribute('class', 'edit')
+        editEl.textContent = "edit"
+
+        const deleteEl = document.createElement('button')
+        deleteEl.setAttribute('class', 'delete')
+        deleteEl.textContent = "delete"
+
+        function listenCompletedCheckbox () {
+            checkboxInputEl.checked = todo.completed
+            
+            checkboxInputEl.addEventListener("click", function() {
+                toggleTodo(todo)
+                render()
+            })}
+            
+        function listenDeleteBtn() {
+            // const deleteBtn = todoEl.querySelector('.delete')
+            deleteEl.addEventListener('click', function () {
+                deleteTodo(todo.title)
+                render()
+            })
+        }
 
     listenDeleteBtn()
-    lstenCompletedCheckbox()
-    
+    listenCompletedCheckbox()
+    checkboxDivEl.append(checkboxInputEl)
+    textDivEl.append(textPEl)
+    buttonDivEl.append(editEl, deleteEl)
+    todoEl.append(checkboxDivEl, textDivEl, buttonDivEl)
     todoList.append(todoEl)
     }
 }
@@ -199,10 +231,11 @@ function renderIncompletedTodos() {
 
 
 function render() {
-    listenTodoForm()
     turnOnOfShowCompletedCheckbox()
     renderCompletedTodos()
     renderIncompletedTodos()
 }
+
+listenTodoForm()
 
 render()
